@@ -1,4 +1,3 @@
-
 (function() {
     var pressedKeys = {};
 
@@ -25,6 +24,7 @@
         pressedKeys[key] = status;
     }
 
+    // --------------------------------------------------------------
     document.addEventListener('keydown', function(e) {
         setKey(e, true);
     });
@@ -41,5 +41,6 @@
         isDown: function(key) {
             return pressedKeys[key.toUpperCase()];
         }
-    };
+    }
+
 })();
