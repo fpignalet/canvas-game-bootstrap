@@ -1,67 +1,76 @@
-(function () {
-    var resourceCache = {};
-    var loading = [];
-    var readyCallbacks = [];
+class Resources {
+
+    /// @brief
+    constructor () {
+        this.resourceCache = {};
+        this.readyCallbacks = [];
+
+        window.rsrc = this;
+    }
 
     // --------------------------------------------------------------
-    // Load an image url or an array of image urls
-    function load(urlOrArr) {
+    /// @brief
+    /// @param url
+    get(url) {
+        return this.resourceCache[url];
+    }
+
+    /// @brief Load an image url or an array of image urls
+    /// @param urlOrArr
+    setup(urlOrArr) {
+        const local = this;
         if (urlOrArr instanceof Array) {
             urlOrArr.forEach(function (url) {
-                _load(url);
+                local.load(url);
             });
         }
         else {
-            _load(urlOrArr);
+            this.load(urlOrArr);
         }
     }
 
-    function _load(url) {
-        if (resourceCache[url]) {
-            return resourceCache[url];
+    /// @brief
+    /// @param func
+    onReady(func) {
+        this.readyCallbacks.push(func);
+    }
+
+    // --------------------------------------------------------------
+    /// @brief
+    /// @param url
+    load(url) {
+        if (this.resourceCache[url]) {
+            return this.resourceCache[url];
         }
         else {
-            var img = new Image();
+            const local = this;
+            const img = new Image();
             img.onload = function () {
-                resourceCache[url] = img;
+                local.resourceCache[url] = img;
 
-                if (isReady()) {
-                    readyCallbacks.forEach(function (func) {
+                if (local.isReady()) {
+                    local.readyCallbacks.forEach(function (func) {
                         func();
                     });
                 }
             };
-            resourceCache[url] = false;
+
+            this.resourceCache[url] = false;
             img.src = url;
         }
     }
 
-    // --------------------------------------------------------------
-    function get(url) {
-        return resourceCache[url];
-    }
-
-    function onReady(func) {
-        readyCallbacks.push(func);
-    }
-
-    function isReady() {
+    /// @brief
+    isReady() {
         var ready = true;
-        for (var k in resourceCache) {
-            if (resourceCache.hasOwnProperty(k) &&
-                !resourceCache[k]) {
+        for (var k in this.resourceCache) {
+            if (this.resourceCache.hasOwnProperty(k) &&
+                !this.resourceCache[k]) {
                 ready = false;
             }
         }
+
         return ready;
     }
 
-    // --------------------------------------------------------------
-    window.resources = {
-        load: load,
-        get: get,
-        onReady: onReady,
-        isReady: isReady
-    };
-
-})();
+}

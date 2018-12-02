@@ -1,5 +1,7 @@
-(function () {
-    function Renderer() {
+class Renderer {
+
+    /// @brief
+    constructor(wdht) {
         this.canvas = document.createElement("canvas");
         this.canvas.width = wdht[0];
         this.canvas.height = wdht[1];
@@ -8,42 +10,47 @@
         this.ctx = this.canvas.getContext("2d");
         this.terrainPattern = null;
 
+        window.render = this;
     }
 
-    Renderer.prototype = {
+    setup(bkgnd) {
+        const image = rsrc.get(bkgnd);
+        this.terrainPattern = this.ctx.createPattern(image, 'repeat');
 
-        update: function () {
-            this.ctx.fillStyle = this.terrainPattern;
-            this.ctx.fillRect(0, 0, renderer.canvas.width, renderer.canvas.height);
+    }
 
-            if (!core.isGameOver) {
-                this.entity(core.player);
-            };
+    /// @brief
+    update() {
+        this.ctx.fillStyle = this.terrainPattern;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-            this.entities(core.bullets);
-            this.entities(core.enemies);
-            this.entities(core.explosions);
+        if (!core.isGameOver) {
+            this.entity(core.player);
+        };
 
-        },
+        this.entities(core.bullets);
+        this.entities(core.enemies);
+        this.entities(core.explosions);
 
-        entities: function (list) {
-            for (var i = 0; i < list.length; i++) {
-                this.entity(list[i]);
-            }
-        },
+    }
 
-        entity: function(entity) {
-            this.ctx.save();
-
-            this.ctx.translate(entity.pos[0], entity.pos[1]);
-            entity.sprite.render(this.ctx);
-
-            this.ctx.restore();
+    /// @brief
+    /// @param list
+    entities(list) {
+        for (var i = 0; i < list.length; i++) {
+            this.entity(list[i]);
         }
-
     }
 
-    // --------------------------------------------------------------
-    window.Renderer = Renderer;
+    /// @brief
+    /// @param entity
+    entity(entity) {
+        this.ctx.save();
 
-})();
+        this.ctx.translate(entity.pos[0], entity.pos[1]);
+        entity.sprite.render(this.ctx);
+
+        this.ctx.restore();
+    }
+
+}

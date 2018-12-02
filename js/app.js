@@ -1,26 +1,37 @@
 // -----------------------------------------------------------------------------------------------------------------
-var images = [
+const app_images = [
     'img/sprites.png',
-//    'img/rob1.png',
     'img/terrain.png'
 ];
 
-var wdht = [
+const app_wdht = [
     1024,
     768
 ]
 
-var lastTime = 0;
-
-var core = null;
-var renderer = null;
-
 // -----------------------------------------------------------------------------------------------------------------
-// CORE STUFF
+// ENTRY STUFF
 
-// A cross-browser requestAnimationFrame
-// See https://hacks.mozilla.org/2011/08/animating-with-javascript-from-setinterval-to-requestanimationframe/
-var requestAnimFrame = (function () {
+/// @brief start everything
+function app_init() {
+    core.setup(app_images[0]);
+    core.reset();
+
+    render.setup(app_images[1]);
+
+    app_loop();
+}
+
+/// @brief The app_loop game loop
+function app_loop() {
+    core.execute(Date.now());
+    render.update();
+
+    app_requestAnimFrame(app_loop);
+};
+
+/// @brief A cross-browser requestAnimationFrame. See https://hacks.mozilla.org/2011/08/animating-with-javascript-from-setinterval-to-requestanimationframe/
+var app_requestAnimFrame = (function () {
     console.log(arguments.callee.name);
 
     return window.requestAnimationFrame ||
@@ -35,47 +46,17 @@ var requestAnimFrame = (function () {
         };
 })();
 
-// start everything
-function init() {
-    renderer.terrainPattern = renderer.ctx.createPattern(resources.get(images[1]), 'repeat');
-
-    document.getElementById('play-again').addEventListener('click', function () {
-        reset();
-    });
-
-    reset();
-    main();
-}
-
-// Reset game to original state
-function reset() {
-    document.getElementById('game-over').style.display = 'none';
-    document.getElementById('game-over-overlay').style.display = 'none';
-
-    core.reset();
-
-    lastTime = Date.now();
-};
-
-// The main game loop
-function main() {
-    document.getElementById('score').innerHTML = core.score;
-
-    var now = Date.now();
-    var dt = (now - lastTime) / 1000.0;
-    core.execute(dt);
-    renderer.update();
-    lastTime = now;
-
-    requestAnimFrame(main);
-};
-
 // -----------------------------------------------------------------------------------------------------------------
+/// @brief
 (function execute() {
-    resources.load(images);
+    new Resources();
 
-    core = new GameCore(images[0]);
-    renderer = new Renderer();
+    new Input();
+    new Renderer(app_wdht);
 
-    resources.onReady(init);
+    new Core();
+
+    input.setUp();
+    rsrc.setup(app_images);
+    rsrc.onReady(app_init);
 })();
