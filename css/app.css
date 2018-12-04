@@ -69,3 +69,15 @@ canvas {
 #game-over button {
     font-size: 1.5em;
 }
+
+/* --------- PROGRESSBARS --------- */
+.myProgress {
+    width: 100%;
+    background-color: #ddd;
+}
+
+.myBar {
+    width: 1%;
+    height: 30px;
+    background-color: #68B4FF;
+}

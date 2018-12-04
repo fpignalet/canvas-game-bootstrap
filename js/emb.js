@@ -1,11 +1,11 @@
 const app_images = [
-    'img/sprites.png',
-    'img/terrain.png'
+    'clientside/game/img/sprites.png',
+    'clientside/game/img/terrain.png'
 ];
 
 const app_settings = {
-    "width": 800,
-    "height": 600,
+    "width": 869,
+    "height": 400,
 
     // Speed are in pixels per second
     "speedPlayer": 16,
@@ -21,5 +21,5 @@ const app_settings = {
 };
 
 // -----------------------------------------------------------------------------------------------------------------
-new Core(app_settings, null);
+new Core(app_settings, "myCanvas");
 engine_execute(app_images);
