@@ -14,18 +14,18 @@
 
     <body>
 
-        <div id="game-over-overlay">
+        <div id="game-over-overlay0" class="game-over-overlay">
         </div>
 
-        <div id="game-over">
+        <div id="game-over0" class="game-over">
             <h1>GAME OVER</h1>
-            <button id="play-again">Play Again</button>
+            <button id="play-again0">Play Again</button>
 
         </div>
 
-        <div class="wrapper">
+        <div id="wrapper0" class="wrapper" style="background-color: black;">
 
-            <div id="instructions">
+            <div id="instructions0" class="instructions">
                 <ul>
                     <li>move with <span class="key">arrows</span> or <span class="key">wasd</span>
                     </li>
@@ -38,25 +38,30 @@
                 </ul>
             </div>
 
-            <div id="score"></div>
+            <div id="score0" class="score"></div>
             <br><br><br><br><br><br>
             <div class="myProgress">
-                <div class="myBar" id="lifebar"></div>
+                <div id="lifebar0" class="myBar"></div>
             </div>
             <br><br>
 
+            <canvas id="canvas0" style="background-color: black;"/>
+
         </div>
 
-        <script type="text/javascript" src="js/lib/resources.js"></script>
-        <script type="text/javascript" src="js/lib/input.js"></script>
-        <script type="text/javascript" src="js/lib/engine.js"></script>
-        <script type="text/javascript" src="js/lib/render.js"></script>
+        <script type="module">
+            import Multiple from "./js/lib/instances.js";
+            import Core from "./js/impl/core.js";
+            import execute from "./js/lib/execute.js";
+            import {
+                app_settings,
+                app_guimap,
+                app_images
+            } from "./js/appset.js";
 
-        <script type="text/javascript" src="js/impl/sprite.js"></script>
-        <script type="text/javascript" src="js/impl/core.js"></script>
-        <script type="text/javascript" src="js/impl/factory.js"></script>
-
-        <script type="text/javascript" src="js/app.js"></script>
+            new Core(app_settings, app_guimap, "canvas0");
+            execute(app_images, Multiple.get(Core.IDENT(), -1));
+        </script>
 
     </body>
 

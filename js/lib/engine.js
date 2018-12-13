@@ -1,13 +1,34 @@
-class Engine {
+/// @brief abstract class to implement all central game mechanism
+import Multiple from "./instances.js";
+import Resources from "./resources.js";
+import Renderer from "../lib/render.js";
+import Input from "../lib/input.js";
+
+class AEngine extends Multiple {
+
+    /****************************************
+     * CONSTANTS
+     ****************************************/
+    static IDENT() { return "engine" };
+
+    /****************************************
+     * PUBLIC IMPLEMENTATION
+     ****************************************/
 
     /// @brief
-    constructor(settings, contid) {
-        // -----------------------------------------
-        // Speed in pixels per second
-        this.speedPlayer = settings["speedPlayer"];
-        this.speedEnemy = settings["speedEnemy"];
-        this.speedExplosion = settings["speedExplosion"];
+    /// @param settings
+    /// @param canid
+    /// @uses AEngine
+    constructor(settings, canid) {
+        // from stackoverlow:
+        // https://stackoverflow.com/questions/29480569/does-ecmascript-6-have-a-convention-for-abstract-classes
+        if (new.target === AEngine) {
+            throw new TypeError("Cannot construct AEngine instance directly");
+        }
 
+        super(AEngine.IDENT());
+
+        // -----------------------------------------
         this.incrPlayer = settings["incrPlayer"];
         this.incrBullet = settings["incrBullet"];
         this.incrEnemy = settings["incrEnemy"];
@@ -16,126 +37,157 @@ class Engine {
         this.threshFire = settings["threshFire"];
 
         // -----------------------------------------
-        this.image = null;
-
-        // -----------------------------------------
-        new Resources();
-
-        new Input();
-        new Renderer([ settings["width"], settings["height"] ], contid);
-
         this.init();
-
-        window.engine = this;
-
+        this.create(settings, canid);
     }
 
-    /// @brief Reset game to original state
+    /// @brief init framework
+    /// @param settings
+    /// @param canid
+    /// @uses Resources, Input, Renderer
+    create(settings, canid) {
+        new Resources();
+
+        const wdht = [ settings["width"], settings["height"] ];
+        new Renderer(wdht, canid);
+
+        new Input();
+        Multiple.get(Input.IDENT(), this.index).setUp(canid);
+    }
+
+    /// @brief prepare internal handling attributes for each new game
     init() {
+        // entities
         this.player = {};
         this.bullets = [];
         this.enemies = [];
         this.explosions = [];
 
+        // time
         const now = Date.now();
         this.lastFire = now;
         this.lastTime = now;
         this.enemyTime = 0;
 
+        // status
         this.life = 100;
         this.score = 0;
         this.isGameOver = false;
     }
 
-    // -------------------------------------------------------------------------------------------------------------
-    /// @brief start everything
-    setup(sprites) {
-        const local = this;
-        document.getElementById('play-again').addEventListener('click', function () {
-            local.reset();
-        });
-
-        // -----------------------------------------
-        this.image = rsrc.get(sprites);
-
-    }
-
     /// @brief Reset game to original state
     reset() {
-        document.getElementById('game-over').style.display = 'none';
-        document.getElementById('game-over-overlay').style.display = 'none';
-
-        input.setUp();
-
         this.init();
-        this.addPlayer();
 
-        document.getElementById("lifebar").style.backgroundColor = "#68B4FF";
-        document.getElementById("lifebar").style.width = this.life + '%';
+        this.begin();
+        this.addPlayer();
+        this.updatelife();
 
     }
 
-    /// @brief
+    /// @brief the main entry method, which leads everything
+    /// @param now is the current time
     execute(now) {
 
-        const dt = (now - this.lastTime) / 1000.0;
+        try {
+            const dt = (now - this.lastTime) / 1000.0;
 
-        this.updatelife();
+            this.updatelife();
 
-        //--------------------------------------------------------
-        this.updateEntities(dt);
-        const addshot = this.handleInput(dt);
-        if (true === this.isGameOver) {
-            return;
+            /*****************************************
+             UPDATING ENTITIES
+             *****************************************/
+            this.updateEntities(dt);
+            const addshot = this.handleInput(dt);
+            if (true === this.isGameOver) {
+                return;
+            }
+
+            /*****************************************
+             ADDING ENTITIES
+             *****************************************/
+            if(true === addshot) {
+                this.addShot();
+                this.lastFire = now;
+            }
+
+            this.enemyTime += dt;
+            this.addEnemy();
+
+            /*****************************************
+             REMOVING ENTITIES
+             *****************************************/
+            this.checkPlayerBounds();
+            this.checkCollisions();
         }
-
-        //--------------------------------------------------------
-        if(true === addshot) {
-            this.addShot();
-            this.lastFire = now;
+        catch (e) {
+            this.end();
         }
-
-        this.enemyTime += dt;
-        this.addEnemy();
-
-        //--------------------------------------------------------
-        this.checkPlayerBounds();
-        this.checkCollisions();
-
-        document.getElementById('score').innerHTML = this.score;
-
-        this.lastTime = now;
+        finally {
+            this.updatescore();
+            this.lastTime = now;
+        }
     }
 
     // -------------------------------------------------------------------------------------------------------------
     /// @brief
     /// @param dt
+    /// @uses Input
     handleInput(dt) {
-        if (input.isDown('DOWN') || input.isDown('s')) {
-            this.player.pos[1] += this.incrPlayer * dt;
+        let fire = false;
+
+        const input = Multiple.get(Input.IDENT(), this.index);
+        const somewhere = input.isSelected(Input.CLICK());
+        if(null != somewhere){
+            //Touch input
+            if(this.player.pos[0] < somewhere["X"]){
+                this.player.pos[0] += this.incrPlayer * dt;
+            }
+
+            if(this.player.pos[0] > somewhere["X"]){
+                this.player.pos[0] -= this.incrPlayer * dt;
+            }
+
+            if(this.player.pos[1] < somewhere["Y"]){
+                this.player.pos[1] += this.incrPlayer * dt;
+            }
+
+            if(this.player.pos[1] > somewhere["Y"]){
+                this.player.pos[1] -= this.incrPlayer * dt;
+            }
+
+            fire = (Date.now() - this.lastFire) > this.threshFire;
+        }
+        else {
+            //Mouse / keyboard input
+            if (input.isSelected(Input.LEFT()) || input.isSelected('a')) {
+                this.player.pos[0] -= this.incrPlayer * dt;
+            }
+
+            if (input.isSelected(Input.RIGHT()) || input.isSelected('d')) {
+                this.player.pos[0] += this.incrPlayer * dt;
+            }
+
+            if (input.isSelected(Input.DOWN()) || input.isSelected('s')) {
+                this.player.pos[1] += this.incrPlayer * dt;
+            }
+
+            if (input.isSelected(Input.UP()) || input.isSelected('w')) {
+                this.player.pos[1] -= this.incrPlayer * dt;
+            }
+
+            if (input.isSelected(Input.SPACE())) {
+                fire = (Date.now() - this.lastFire) > this.threshFire;
+            }
+
         }
 
-        if (input.isDown('UP') || input.isDown('w')) {
-            this.player.pos[1] -= this.incrPlayer * dt;
-        }
-
-        if (input.isDown('LEFT') || input.isDown('a')) {
-            this.player.pos[0] -= this.incrPlayer * dt;
-        }
-
-        if (input.isDown('RIGHT') || input.isDown('d')) {
-            this.player.pos[0] += this.incrPlayer * dt;
-        }
-
-        if (input.isDown('SPACE')) {
-            return (Date.now() - this.lastFire) > this.threshFire;
-        }
-
-        return false;
+        return fire;
     }
 
-    /// @brief
-    /// @param dt
+    /// @brief update all registered entities like player, bullets, enemies, explosions
+    /// @param dt is the difference between now and lats time
+    /// @uses Renderer
     updateEntities(dt) {
 
         //--------------------------------------------------------
@@ -161,6 +213,7 @@ class Engine {
 
             bullet.sprite.update(dt);
 
+            const render = Multiple.get(Renderer.IDENT(), this.index);
             // Remove if offscreen
             if ((bullet.pos[1] < 0) ||
                 (bullet.pos[1] > render.canvas.height) ||
@@ -186,7 +239,7 @@ class Engine {
 
                 this.life = this.life - 20;
                 if(0 >= this.life) {
-                    this.terminate();
+                    this.end();
                     return;
                 }
 
@@ -211,8 +264,11 @@ class Engine {
     }
 
     // -------------------------------------------------------------------------------------------------------------
-    /// @brief Check bounds
+    /// @brief limit to the player movement
+    /// @uses Renderer
     checkPlayerBounds() {
+        const render = Multiple.get(Renderer.IDENT(), this.index);
+
         if (this.player.pos[0] < 0) {
             this.player.pos[0] = 0;
         }
@@ -233,90 +289,80 @@ class Engine {
         for (let i = 0; i < this.enemies.length; i++) {
             const enemy = this.enemies[i];
 
-            const pos1 = enemy.pos;
-            const size1 = enemy.sprite.size;
-
-            let pos2 = 0;
-            let size2 = 0;
+            const poscur = enemy.pos;
+            const sizecur = enemy.sprite.size;
 
             //----------------------------
             //Do ennemy meets a bullet?
             for (let j = 0; j < this.bullets.length; j++) {
                 const bullet = this.bullets[j];
 
-                pos2 = bullet.pos;
-                size2 = bullet.sprite.size;
-                if (this.boxCollides(pos1, size1, pos2, size2)) {
-                    i = this.endEnemy(i, j, pos1);
-                    // stop this iteration, this enemy is out. Now check the next one
+                const posother = bullet.pos;
+                const sizeother = bullet.sprite.size;
+                if (this.boxCollides(poscur, sizecur, posother, sizeother)) {
+                    //this enemy is out
+                    i = this.endEnemy(i, j, poscur);
                     i--;
 
-                    // update...
+                    // update score
                     this.score += this.incrScore;
-                    if(96 > this.life) {
+                    if(100 > this.life) {
                         this.life = this.life + 1;
                     }
 
+                    // stop this iteration then check the next enemy
                     break;
                 }
             }
 
             //----------------------------
             //Do ennemy meets player?
-            pos2 = this.player.pos;
-            size2 = this.player.sprite.size;
-            if (this.boxCollides(pos1, size1, pos2, size2)) {
-                i = this.endEnemy(i, -1, pos1);
+            const posplayer = this.player.pos;
+            const sizeplayer = this.player.sprite.size;
+            if (this.boxCollides(poscur, sizecur, posplayer, sizeplayer)) {
+                i = this.endEnemy(i, -1, poscur);
 
-                this.terminate();
+                this.end();
                 break;
             }
         }
     }
 
-    /// @brief
-    /// @param pos
-    /// @param size
+    /// @brief check hitboxes intersections
+    /// @param pos1
+    /// @param size1
     /// @param pos2
     /// @param size2
-    boxCollides(pos, size, pos2, size2) {
-        return ((
-                x, y, r, b,
-                x2, y2, r2, b2
-            ) => {
-                return !(
-                    r <= x2 || x > r2 ||
-                    b <= y2 || y > b2
-                );
-            })(
-                //left:x,   top:y,      right:r,            bottom:b
-                pos[0],     pos[1],     pos[0] + size[0],   pos[1] + size[1],
-                //left2:x2, top2:y2,    right2:r2,          bottom2:b2
-                pos2[0],    pos2[1],    pos2[0] + size2[0], pos2[1] + size2[1]
-            );
-        
-    }
-
-    updatelife() {
-        document.getElementById("lifebar").style.width = this.life + '%';
-        if(50 >= this.life) {
-            document.getElementById("lifebar").style.backgroundColor = "red";
-        }
-        else {
-            document.getElementById("lifebar").style.backgroundColor = "#68B4FF";
-        }
-
-    }
-
-    terminate() {
-        document.getElementById('game-over').style.display = 'block';
-        document.getElementById('game-over-overlay').style.display = 'block';
-
-        this.life = 0;
-        this.isGameOver = true;
+    boxCollides(pos1, size1, pos2, size2) {
+        return !(
+            ((pos1[0] + size1[0]) <= pos2[0]) ||
+             (pos1[0] > (pos2[0] + size2[0])) ||
+            ((pos1[1] + size1[1]) <= pos2[1]) ||
+             (pos1[1] > (pos2[1] + size2[1]))
+        );
     }
 
     // -------------------------------------------------------------------------------------------------------------
+    /// GUI layer, with DOM access
+
+    /// @brief start everything
+    /// @param something
+    setup(something) {}
+
+    /// @brief hide gameover panel
+    begin() {}
+    /// @brief show gameover panel. says game is over.
+    end() {}
+
+    /// @brief start everything
+    /// @param something
+    updatescore() {}
+    /// @brief
+    updatelife() {}
+
+    // -------------------------------------------------------------------------------------------------------------
+    /// ENTITIES layer
+
     /// @brief
     addPlayer() {}
     /// @brief
@@ -338,48 +384,4 @@ class Engine {
 
 }
 
-/// @brief
-function engine_execute(images) {
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // ENTRY STUFF
-
-    /// @brief start everything
-    function app_init() {
-        engine.setup(images[0]);
-        engine.reset();
-
-        render.setup(images[1]);
-
-        app_loop();
-    }
-
-    /// @brief The app loop
-    function app_loop() {
-        engine.execute(Date.now());
-        render.update();
-
-        app_requestAnimFrame(app_loop);
-    }
-
-    /// @brief A cross-browser requestAnimationFrame. See https://hacks.mozilla.org/2011/08/animating-with-javascript-from-setinterval-to-requestanimationframe/
-    let app_requestAnimFrame = (function () {
-        console.log(arguments.callee.name);
-
-        return window.requestAnimationFrame ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame ||
-            window.oRequestAnimationFrame ||
-            window.msRequestAnimationFrame ||
-            function (callback) {
-                console.log(arguments.callee.name);
-
-                window.setTimeout(callback, 1000 / 60);
-            };
-    })();
-
-    input.setUp();
-
-    rsrc.setup(images);
-    rsrc.onReady(app_init);
-}
+export default AEngine;

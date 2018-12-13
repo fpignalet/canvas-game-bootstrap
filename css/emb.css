@@ -8,13 +8,13 @@ canvas {
     margin-top: 2em;
 }
 
-#instructions {
+.instructions {
     float: left;
     font-family: sans-serif;
     color: #757575;
 }
 
-#score {
+.score {
     float: right;
     color: white;
     font-size: 2em;
@@ -24,20 +24,20 @@ canvas {
     color: #aaffdd;
 }
 
-#game-over-overlay {
+.game-over-overlay {
     background-color: black;
     opacity: .5;
 }
 
-#game-over {
+.game-over {
     text-align: center;
 }
 
-#game-over h1 {
+.game-over h1 {
     font-size: 3em;
     font-family: sans-serif;
 }
 
-#game-over button {
+.game-over button {
     font-size: 1.5em;
 }

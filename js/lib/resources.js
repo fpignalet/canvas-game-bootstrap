@@ -1,12 +1,23 @@
 'use strict';
-class Resources {
+import Multiple from "./instances.js";
+
+class Resources extends Multiple {
+
+    /****************************************
+     * CONSTANTS
+     ****************************************/
+    static IDENT() { return "rsrc" };
+
+    /****************************************
+     * PUBLIC IMPLEMENTATION
+     ****************************************/
 
     /// @brief
     constructor () {
+        super(Resources.IDENT());
+
         this.resourceCache = {};
         this.readyCallbacks = [];
-
-        window.rsrc = this;
     }
 
     // --------------------------------------------------------------
@@ -17,7 +28,7 @@ class Resources {
     }
 
     /// @brief Load an image url or an array of image urls
-    /// @param urlOrArr
+    /// @param urlOrArr a path or a path array
     setup(urlOrArr) {
         const local = this;
         if (urlOrArr instanceof Array) {
@@ -30,15 +41,15 @@ class Resources {
         }
     }
 
-    /// @brief
-    /// @param func
+    /// @brief registers a function to be called when all resources are loaded
+    /// @param func is a callback
     onReady(func) {
         this.readyCallbacks.push(func);
     }
 
     // --------------------------------------------------------------
-    /// @brief
-    /// @param url
+    /// @brief load a resource
+    /// @param url is the path of the resource to be loaded
     load(url) {
         if (this.resourceCache[url]) {
             return this.resourceCache[url];
@@ -62,6 +73,7 @@ class Resources {
     }
 
     /// @brief
+    /// @returns true when all required resources have been loader
     isReady() {
         let ready = true;
         for (let k in this.resourceCache) {
@@ -75,3 +87,5 @@ class Resources {
     }
 
 }
+
+export default Resources;
