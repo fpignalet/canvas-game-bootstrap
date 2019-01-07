@@ -73,6 +73,7 @@ class AEngine extends Multiple {
         this.life = 100;
         this.score = 0;
         this.isGameOver = false;
+        this.isPageOver = false;
     }
 
     /// @brief Reset game to original state
@@ -118,7 +119,7 @@ class AEngine extends Multiple {
              REMOVING ENTITIES
              *****************************************/
             this.checkPlayerBounds();
-            this.checkCollisions();
+            this.checkEnemyCollisions();
         }
         catch (e) {
             this.end();
@@ -285,7 +286,7 @@ class AEngine extends Multiple {
     }
 
     /// @brief Run collision detection for each ennemy
-    checkCollisions() {
+    checkEnemyCollisions() {
         for (let i = 0; i < this.enemies.length; i++) {
             const enemy = this.enemies[i];
 

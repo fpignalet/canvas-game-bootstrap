@@ -1,8 +1,10 @@
+/// @brief the sprites / terrain images to be used
 export const app_images = [
     'clientside/game/img/sprites.png',
     'clientside/game/img/terrain.png'
 ];
 
+/// @brief everything about general app geometry
 export const app_settings = {
     // for Renderer
     width: 800,
@@ -24,6 +26,7 @@ export const app_settings = {
 
 };
 
+/// @brief anything to get GUI / engine linked together
 export const app_guimap = {
     // for Engine
     elemscoreid: 'score',

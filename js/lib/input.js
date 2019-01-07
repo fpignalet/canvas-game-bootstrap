@@ -32,6 +32,7 @@ class Input extends Multiple {
     }
 
     /// @brief
+    /// @param canid
     setUp(canid) {
         const target = document.getElementById(canid);
 

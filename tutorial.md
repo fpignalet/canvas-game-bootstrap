@@ -51,7 +51,7 @@ From here on, we will be using the `ctx` variable to render everything.
 You need a game loop that continually updates and renders the game. [Here's what it looks like](https://github.com/jlongster/canvas-game-bootstrap/blob/master/js/app.js#L22):
 
 ```js
-// The main game loop
+app_main
 var lastTime;
 function main() {
     var now = Date.now();
@@ -63,6 +63,7 @@ function main() {
     lastTime = now;
     requestAnimFrame(main);
 };
+
 ```
 
 You update and render the scene, and then use [requestAnimationFrame](http://paulirish.com/2011/requestanimationframe-for-smart-animating/) to queue up the next loop. It's basically a smarter way of saying `setTimeout(main, 1000 / 60)`, which attempts to render a 60 frames/second. At the [very top](https://github.com/jlongster/canvas-game-bootstrap/blob/master/js/app.js#L2) of app.js we shim rAF as the `requestAnimFrame` function since [not all browsers](http://caniuse.com/#feat=requestanimationframe) support it yet.
@@ -271,6 +272,7 @@ function Sprite(url, pos, size, speed, frames, dir, once) {
     this.dir = dir || 'horizontal';
     this.once = once;
 };
+
 ```
 
 This is the constructor for the `Sprite` class. It takes quite a number of arguments, but not all of them are required. Let's go through them one by one:
@@ -348,7 +350,7 @@ function update(dt) {
     updateEntities(dt);
 
     // It gets harder over time by adding enemies using this
-    // equation: 1-.993^gameTime
+    enemyTime
     if(Math.random() < 1 - Math.pow(.993, gameTime)) {
         enemies.push({
             pos: [canvas.width,
@@ -362,6 +364,7 @@ function update(dt) {
 
     scoreEl.innerHTML = score;
 };
+
 ```
 
 Note how we add new enemies to the scene. We add an enemy if a random value is lower then a threshold, and it's added at the right side of the game just outside the view. It is randomly placed on the y axis by multiplying a random value by the canvas height minus the height of the enemy, so that the bottom doesn't cut any off. The value `39` is hardcoded because we know that's the height of the sprite. This code is simpler for the sake of the tutorial.
@@ -693,6 +696,7 @@ function render() {
     renderEntities(explosions);
 };
 
+
 function renderEntities(list) {
     for(var i=0; i<list.length; i++) {
         renderEntity(list[i]);
@@ -738,6 +742,7 @@ function reset() {
 
     player.pos = [50, canvas.height / 2];
 };
+
 ```
 
 `gameOver` displays the screen defined in [`index.html`](https://github.com/jlongster/canvas-game-bootstrap/blob/master/index.html) which says "Game Over" and has a button to restart.

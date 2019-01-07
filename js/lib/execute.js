@@ -22,6 +22,10 @@ function execute(images, engine) {
 
     /// @brief The app loop, scheduled by requestAnimFrame below
     function exec_loop() {
+        if(true === engine.isPageOver) {
+            return;
+        }
+
         engine.execute(Date.now());
 
         const render = Multiple.get(Renderer.IDENT(), engine.index);
