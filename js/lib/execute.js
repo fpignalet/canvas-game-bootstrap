@@ -6,6 +6,8 @@ import Renderer from "./render.js";
 
 function execute(images, engine) {
 
+    let firsttime = true;
+
     // -----------------------------------------------------------------------------------------------------------------
     // ENTRY STUFF
 
@@ -26,7 +28,13 @@ function execute(images, engine) {
             return;
         }
 
-        engine.execute(Date.now());
+        if(true === firsttime) {
+            engine.end();
+            firsttime = false;
+        }
+        else {
+            engine.execute(Date.now());
+        }
 
         const render = Multiple.get(Renderer.IDENT(), engine.index);
         render.update();
