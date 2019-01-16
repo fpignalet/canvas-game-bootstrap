@@ -3,7 +3,6 @@
 import Multiple from "./instances.js";
 import Resources from "./resources.js";
 import Renderer from "./render.js";
-import Core from "../impl/core";
 
 function execute(images, engine) {
 
