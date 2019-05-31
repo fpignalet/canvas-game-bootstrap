@@ -32,48 +32,79 @@ class Renderer extends Multiple {
         this.canvas.height = wdht[1];
 
         this.ctx = this.canvas.getContext("2d");
-        this.terrainPattern = null;
     }
 
     /// @brief
     /// @param bkgnd is the background image to be used
     setup(bkgnd) {
-        const rsrc = Multiple.get(Resources.IDENT(), this.index);
-        const image = rsrc.get(bkgnd);
-        this.terrainPattern = this.ctx.createPattern(image, 'repeat');
-
+        this.background_prepare(bkgnd);
     }
 
     /// @brief redraws everything
     update() {
-        this.ctx.fillStyle = this.terrainPattern;
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.background_draw();
 
         const engine = Multiple.get(AEngine.IDENT(), this.index);
         if (!engine.isGameOver) {
-            this.drawone(engine.player);
+            this.entities_drawone(engine.player);
         }
-        this.drawall(engine.bullets);
-        this.drawall(engine.enemies);
-        this.drawall(engine.explosions);
+        this.entities_drawall(engine.bullets);
+        this.entities_drawall(engine.enemies);
+        this.entities_drawall(engine.explosions);
 
     }
 
     /****************************************
      * INTERNAL IMPLEMENTATION
      ****************************************/
+    background_prepare(bkgnd) {
+        const rsrc = Multiple.get(Resources.IDENT(), this.index);
+        this.image = rsrc.get(bkgnd);
+        this.velocity = 100;
+        this.distance = this.image.width;
+        this.lastFrameRepaintTime = window.performance.now();
+    }
+
+    background_calcOffset(time){
+        var frameGapTime = time - this.lastFrameRepaintTime;
+        this.lastFrameRepaintTime = time;
+
+        var translateX = this.velocity*(frameGapTime/1000);
+        return translateX;
+    }
+
+    background_draw() {
+        try {
+            const time = window.performance.now();
+
+            this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
+            this.ctx.save();
+
+            this.distance -= this.background_calcOffset(time);
+            if(this.distance <= 0){
+                this.distance = this.image.width;
+            }
+            this.ctx.translate(this.distance,0);
+
+            this.ctx.drawImage(this.image,0,0);
+            this.ctx.drawImage(this.image,-this.image.width+1,0);
+        }
+        finally {
+            this.ctx.restore();
+        }
+    }
 
     /// @brief draws entities
     /// @param list
-    drawall(list) {
+    entities_drawall(list) {
         list.forEach((item, index) => {
-            this.drawone(item);
+            this.entities_drawone(item);
         });
     }
 
     /// @brief draws one entity
     /// @param entity
-    drawone(entity) {
+    entities_drawone(entity) {
         try {
             this.ctx.save();
 
