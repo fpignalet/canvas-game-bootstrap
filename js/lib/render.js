@@ -75,10 +75,10 @@ class Renderer extends Multiple {
 
     background_draw() {
         try {
-            const time = window.performance.now();
-
-            this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
             this.ctx.save();
+
+            const time = window.performance.now();
+            this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
 
             this.distance -= this.background_calcOffset(time);
             if(this.distance <= 0){
