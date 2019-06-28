@@ -33,6 +33,7 @@ export const app_guimap = {
     elemplayagainid: 'play-again',
     elemgameoverid: 'game-over',
     elemgameoverlayid: 'game-over-overlay',
-    elemlifebarid: 'lifebar'
+    elemlifebarid: 'lifebar',
+    elemcanvas: 'canvas'
 
 };
