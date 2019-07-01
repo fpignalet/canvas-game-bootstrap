@@ -1,7 +1,7 @@
 /// @brief the sprites / terrain images to be used
 export const app_images = [
-    './img/sprites.png',
-    './img/terrain.png'
+    './public/images/sprites.png',
+    './public/images/terrain.png'
 ];
 
 /// @brief everything about general app geometry

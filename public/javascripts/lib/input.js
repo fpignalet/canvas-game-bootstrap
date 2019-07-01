@@ -1,8 +1,8 @@
 'use strict';
 
 import Multiple from "./instances.js";
-import AEngine from "../lib/engine.js";
-import Renderer from "../lib/render.js";
+import AEngine from "./engine.js";
+import Renderer from "./render.js";
 
 class Input extends Multiple {
 

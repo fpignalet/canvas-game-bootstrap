@@ -7,8 +7,8 @@ See https://github.com/jlongster/canvas-game-bootstrap/blob/master/tutorial.md f
 - install node.js
 - create a package.json file with at least this content
   "scripts": {
-    "build": "webpack",
-    "start": "node ./index.js",
+    "build": "webpack", --> will launch webpack using webpack.config.js
+    "start": "node ./rawstart.js", --> will launch node app
   },
   "devDependencies": {
     "webpack": "^4.35.0",
@@ -21,4 +21,4 @@ See https://github.com/jlongster/canvas-game-bootstrap/blob/master/tutorial.md f
         path: path.resolve(__dirname, 'dist')
     }
 - execute in console "npm run-script build"
-- execute in console "npm start"
+- execute in console "npm run-script start"
