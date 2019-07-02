@@ -1,4 +1,4 @@
-module.exports = {
+{
     "id": 1,
 
     "content1": "CONTENT 1",
@@ -20,19 +20,19 @@ module.exports = {
     ],
 
     "collapsable-text": [{
-        "title": "TITLE",
+        "over": "TITLE",
         "text": "COLLAPSABLE TEXT",
         "subcontent":
             {
-                "title": "SUBTITLE",
+                "over": "SUBTITLE",
                 "text": "COLLAPSABLE SUBTEXT",
                 "subcontent":
                     {
-                        "title": "SUBSUBTITLE",
+                        "over": "SUBSUBTITLE",
                         "text": "COLLAPSABLE SUBSUBTEXT",
                         "subcontent":
                             {
-                                "title": "SUBSUBSUBTITLE",
+                                "over": "SUBSUBSUBTITLE",
                                 "text": "COLLAPSABLE SUBSUBSUBTEXT",
                                 "subcontent": null
                             }

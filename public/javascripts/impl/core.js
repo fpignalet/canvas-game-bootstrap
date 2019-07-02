@@ -20,7 +20,6 @@ class Core extends AEngine{
         this.elemgameoverlayid = guimap["elemgameoverlayid"];
         this.elemlifebarid = guimap["elemlifebarid"];
 
-        // -----------------------------------------
         new Factory(settings);
     }
 
@@ -36,6 +35,10 @@ class Core extends AEngine{
 
         const local = this;
         let it = document.getElementById(this.elemplayagainid+this.index);
+        if(null == it) {
+            return;
+        }
+
         it.addEventListener('click', () => {
             local.reset();
         });
@@ -47,8 +50,17 @@ class Core extends AEngine{
         let it = null;
 
         it = document.getElementById(this.elemgameoverid+this.index);
+        if(null == it) {
+            return;
+        }
+
         it.style.display = 'none';
+
         it = document.getElementById(this.elemgameoverlayid+this.index);
+        if(null == it) {
+            return;
+        }
+
         it.style.display = 'none';
     }
 
@@ -57,8 +69,17 @@ class Core extends AEngine{
         let it = null;
 
         it = document.getElementById(this.elemgameoverid+this.index);
+        if(null == it) {
+            return;
+        }
+
         it .style.display = 'block';
+
         it = document.getElementById(this.elemgameoverlayid+this.index);
+        if(null == it) {
+            return;
+        }
+
         it.style.display = 'block';
 
         this.life = 0;
@@ -69,6 +90,10 @@ class Core extends AEngine{
     /// @param something
     updatescore() {
         let it = document.getElementById(this.elemscoreid+this.index);
+        if(null == it) {
+            return;
+        }
+
         it.innerHTML = this.score;
 
     }
@@ -78,6 +103,10 @@ class Core extends AEngine{
         let it = null;
 
         it = document.getElementById(this.elemlifebarid+this.index);
+        if(null == it) {
+            return;
+        }
+
         it.style.width = this.life + '%';
         if(50 >= this.life) {
             it = document.getElementById(this.elemlifebarid+this.index);

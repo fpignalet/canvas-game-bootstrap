@@ -1,5 +1,15 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h1= msg
+  p Welcome to #{msg}
+  u Tests
+    li version [pug + vanilla javascript] :
+      a(href="game")
+        button(type="button") Launch
+    li version [pug + React] :
+      a(href="react")
+        button(type="button") React
+    li some other tests :
+      a(href="tests")
+        button(type="button") Tests

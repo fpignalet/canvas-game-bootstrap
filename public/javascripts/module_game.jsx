@@ -3,16 +3,17 @@
  *************************************************************************************/
 'use strict';
 
-// const React = require('react');
-// const ReactDOM = require('react-dom');
-// const TestApp = require('./reactitems.js');
+const React = require('react');
+const ReactDOM = require('react-dom');
+
+import TestApp from './impl/reactgame.jsx';
 
 /*************************************************************************************
  * IMPLEMENTATION
  *************************************************************************************/
-function reactexecute(id, content) {
-    ReactDOM.render(
-        <TestApp idtab={"reacttablejsx"} />,
-        document.getElementById("reactzone0")
-    );
-}
+const elemId = "reactzone0";
+
+ReactDOM.render(
+    <TestApp />,
+    document.getElementById(elemId)
+);

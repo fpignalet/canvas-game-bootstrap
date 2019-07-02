@@ -1,7 +1,9 @@
-Evolved from "a simple starting point for writing 2d games". 
-See https://github.com/jlongster/canvas-game-bootstrap/blob/master/tutorial.md for more information.
-- now it's all Javascript Classes
-- next version will use React
+20190702: it's now a node + React application
+- execute in console 
+    npm install
+    npm run-script build
+    DEBUG=canvas-game-bootstrap:* npm run-script start
+    or npm run-script start
 
 20190628: it's now a node application
 - install node.js
@@ -20,5 +22,14 @@ See https://github.com/jlongster/canvas-game-bootstrap/blob/master/tutorial.md f
         filename: 'bundle.js', --> the compiled file to be used in html code
         path: path.resolve(__dirname, 'dist')
     }
-- execute in console "npm run-script build"
-- execute in console "npm run-script start"
+- execute in console 
+    npm install
+    npm run-script build
+    DEBUG=canvas-game-bootstrap:* npm run-script start
+    or npm run-script start
+
+2018...:
+    Evolved from "a simple starting point for writing 2d games". 
+    See https://github.com/jlongster/canvas-game-bootstrap/blob/master/tutorial.md for more information.
+    - it's now all Javascript Classes
+
