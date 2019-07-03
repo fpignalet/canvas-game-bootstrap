@@ -1,5 +1,5 @@
 /// @brief abstract class to implement all central game mechanism
-import Multiple from "./instances.js";
+import Multiple from "../instances.js";
 import Resources from "./resources.js";
 import Renderer from "./render.js";
 import Input from "./input.js";

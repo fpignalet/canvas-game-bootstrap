@@ -1,8 +1,8 @@
 'use strict';
-import AEngine from "../lib/engine.js";
-import Renderer from "../lib/render.js";
-import Factory from "./factory.js";
-import Multiple from "../lib/instances.js";
+import AEngine from "../../lib/game/engine.js";
+import Renderer from "../../lib/game/render.js";
+import Factory from "../game/factory.js";
+import Multiple from "../../lib/instances.js";
 
 class Core extends AEngine{
 
@@ -150,7 +150,7 @@ class Core extends AEngine{
     /// @uses Factory, Renderer
     addEnemy() {
         // It gets harder over time by adding enemies using this equation:
-        // 1-.993^enemyTime
+        // 1-.993^enemyTime 
         if (Math.random() >= (1 - Math.pow(.993, this.enemyTime))) {
             return;
         }

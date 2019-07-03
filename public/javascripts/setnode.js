@@ -1,7 +1,7 @@
 /// @brief the sprites / terrain images to be used
 export const app_images = [
-    '/images/sprites.png',
-    '/images/terrain.png'
+    '/rsrc/images/sprites.png',
+    '/rsrc/images/terrain.png'
 ];
 
 /// @brief everything about general app geometry
@@ -30,10 +30,12 @@ export const app_settings = {
 export const app_guimap = {
     // for Engine
     elemscoreid: 'score',
+    elemsinstrid: 'instructions',
     elemplayagainid: 'play-again',
     elemgameoverid: 'game-over',
     elemgameoverlayid: 'game-over-overlay',
     elemlifebarid: 'lifebar',
-    elemcanvas: 'canvas'
+    elemwrapperid: 'wrapper',
+    elemcanvasid: 'canvas'
 
 };

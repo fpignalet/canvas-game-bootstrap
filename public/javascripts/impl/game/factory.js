@@ -1,6 +1,6 @@
 'use strict';
-import Multiple from "../lib/instances.js";
-import Resources from "../lib/resources.js";
+import Multiple from "../../lib/instances.js";
+import Resources from "../../lib/game/resources.js";
 import Sprite from "./sprite.js";
 
 class Factory extends Multiple {

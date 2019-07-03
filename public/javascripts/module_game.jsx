@@ -6,7 +6,7 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 
-import TestApp from './impl/reactgame.jsx';
+import TestApp from './impl/core/reactgame.jsx';
 
 /*************************************************************************************
  * IMPLEMENTATION

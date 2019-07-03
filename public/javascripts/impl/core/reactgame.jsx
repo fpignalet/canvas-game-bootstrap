@@ -11,11 +11,11 @@ const ReactBStrap = require('react-bootstrap');
 /*************************************************************************************
  * IMPORTS
  *************************************************************************************/
-import ReactBaseJSX from '../lib/reactbase.jsx';
+import ReactBaseJSX from '../../lib/reactbase.jsx';
 
 import {
-    ReactCanvasJSX,
-} from '../lib/components/reactgamecanvas.jsx';
+    ReactGameJSX,
+} from '../../lib/react/components_game.jsx';
 
 /*************************************************************************************
  * IMPLEMENTATION
@@ -37,15 +37,15 @@ class TestApp extends ReactBaseJSX {
         return (
             <ReactBStrap.Container>
 
-                { this.renderCanvas() }
+                { this.renderGame() }
 
             </ReactBStrap.Container>
         );
     }
 
-    renderCanvas() {
+    renderGame() {
         return (
-            <ReactCanvasJSX/>
+            <ReactGameJSX/>
         );
     }
 

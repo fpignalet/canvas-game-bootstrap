@@ -1,6 +1,6 @@
 'use strict';
 
-import Multiple from "./instances.js";
+import Multiple from "../instances.js";
 import AEngine from "./engine.js";
 import Renderer from "./render.js";
 

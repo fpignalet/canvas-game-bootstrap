@@ -1,6 +1,6 @@
 /// @brief main entry function
 /// @uses AEngine, Input, Resources
-import Multiple from "./instances.js";
+import Multiple from "../instances.js";
 import Resources from "./resources.js";
 import Renderer from "./render.js";
 

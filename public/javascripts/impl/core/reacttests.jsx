@@ -10,24 +10,35 @@ const ReactBStrap = require('react-bootstrap');
 const Redux = require('redux');
 const ProgressBar = require('react-bootstrap/ProgressBar');
 
-const jsondata1 = require('../../rsrc/datatest.json');
-const jsondata2 = require('../../rsrc/datafpicv.json');
+const jsondata1 = require('../../../rsrc/data/datatest.json');
+const jsondata2 = require('../../../rsrc/data/datafpicv.json');
 
 /*************************************************************************************
  * IMPORTS
  *************************************************************************************/
-import ReactBaseJSX from '../lib/reactbase.jsx';
+import ReactBaseJSX from '../../lib/reactbase.jsx';
 
 import {
     ReactButtonJSX,
-    ReactDynListJSX,
+    ReactDynListJSX
+} from '../../lib/react/components_local.jsx';
+
+import {
     ReactDisclosable,
     ReactTabcontainer
-} from '../lib/components/reactcomponents.jsx';
+} from '../../lib/react/components_bstrap.jsx';
+
+import {
+    ReactConnect
+} from '../../lib/react/components_frontend.jsx';
 
 /*************************************************************************************
  * IMPLEMENTATION
  *************************************************************************************/
+
+class Tools {
+
+}
 
 /// desc
 class TestApp extends ReactBaseJSX {
@@ -37,6 +48,10 @@ class TestApp extends ReactBaseJSX {
      */
     constructor(props) {
         super(props);
+
+        this.state = {
+            now: 0
+        };
 
         this.idtab = props.idtab;
         this.modelname = "default";
@@ -53,12 +68,7 @@ class TestApp extends ReactBaseJSX {
                 }
             }
         );
-
         this.store.subscribe(() => console.log(this.store.getState()));
-
-        this.state = {
-            now: 0
-        };
 
     }
 
@@ -170,17 +180,26 @@ class TestApp extends ReactBaseJSX {
             <ReactBStrap.Container>
 
                 <ReactBStrap.Row>
-                    { this.renderOneCol([0,1]) }
-                    { this.renderOneCol([2,3]) }
+                    { this.renderOneLocalCol([0,1]) }
+                    { this.renderOneLocalCol([2,3]) }
                 </ReactBStrap.Row>
 
                 <ReactBStrap.Row>
-                        { this.renderOneCol([4,5]) }
-                        { this.renderOneCol([6,7]) }
-                        { this.renderOneCol([8,9]) }
+                    { this.renderOneLocalCol([4,5]) }
+                    { this.renderOneLocalCol([6,7]) }
+                    { this.renderOneLocalCol([8,9]) }
+                </ReactBStrap.Row>
+
+                <ReactBStrap.Row>
+                    { this.renderOneBStrapCol() }
+                </ReactBStrap.Row>
+
+                <ReactBStrap.Row>
+                    { this.renderOneFrontendCol() }
                 </ReactBStrap.Row>
 
             </ReactBStrap.Container>
+
         );
     }
 
@@ -194,7 +213,7 @@ class TestApp extends ReactBaseJSX {
      * @param ids
      * @returns {*}
      */
-    renderOneCol(ids) {
+    renderOneLocalCol(ids) {
         return (
             <ReactBStrap.Col>
 
@@ -203,13 +222,39 @@ class TestApp extends ReactBaseJSX {
                 { this.renderButton(ids[0], this.idtab)}
                 { this.renderButton(ids[1], this.idtab)}
 
+                { this.renderDynList()}
+
+            </ReactBStrap.Col>
+        );
+    }
+
+    /**
+     * @param ids
+     * @returns {*}
+     */
+    renderOneBStrapCol() {
+        return (
+            <ReactBStrap.Col>
+
                 { this.renderDiscosables()}
 
                 { this.renderTabContainer()}
 
-                { this.renderDynList()}
-
                 { this.renderProgressBar()}
+
+            </ReactBStrap.Col>
+        );
+    }
+
+    /**
+     * @param ids
+     * @returns {*}
+     */
+    renderOneFrontendCol() {
+        return (
+            <ReactBStrap.Col>
+
+                { this.renderFrontend()}
 
             </ReactBStrap.Col>
         );
@@ -222,8 +267,7 @@ class TestApp extends ReactBaseJSX {
     renderTitle() {
         return (
             <div>
-                FROM MODEL:
-                { this.modelname }
+                FROM MODEL: { this.modelname }
             </div>
         );
     }
@@ -235,12 +279,14 @@ class TestApp extends ReactBaseJSX {
      * @returns {*}
      */
     renderButton(idbt, idtab) {
+        const testtext = jsondata1["testtext"];
+        const testdata = jsondata1["testdata"];
         return (
             <ReactButtonJSX
                 data={document}
                 id={idbt}
-                testtext={ jsondata1["testtext"] }
-                testdata={ jsondata1["testdata"] }
+                testtext={ testtext }
+                testdata={ testdata }
                 tableid={ idtab }
             />
         );
@@ -292,11 +338,13 @@ class TestApp extends ReactBaseJSX {
      * @returns {*}
      */
     renderTabContainer() {
+        const text1 = jsondata1["link-text1"];
+        const text2 = jsondata1["link-text2"];
         return (
             <ReactTabcontainer
                 data={document}
-                text1={jsondata1["link-text1"]}
-                text2={jsondata1["link-text2"]}
+                text1={text1}
+                text2={text2}
             />
         );
     }
@@ -318,6 +366,16 @@ class TestApp extends ReactBaseJSX {
     renderProgressBar() {
         return (
             <ProgressBar id="progressbar" animated now={this.state.now} />
+        );
+    }
+
+    /**
+     *
+     * @returns {*}
+     */
+    renderFrontend() {
+        return (
+            <ReactConnect />
         );
     }
 
