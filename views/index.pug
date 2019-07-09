@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1= msg
+  p Welcome to #{msg}
+  u Tests
+    li version [pug -> vanilla javascript] :
+      a(href="game")
+        button(type="button") Launch
+    li version [pug-> React[vanilla javascript]] :
+      a(href="react")
+        button(type="button") React
