@@ -139,8 +139,12 @@ class Core extends AEngine{
 
     /// @brief remove player sprite
     endPlayer() {
-        // Add an explosion
-        this.endShot(this.player.pos);
+        const factory = Multiple.get(Factory.IDENT(), this.index);
+        const sprite = factory.getexplosionsprite();
+        this.explosions.push({
+            pos: this.player.pos,
+            sprite: sprite
+        });
     }
 
     /**********************************************************************
