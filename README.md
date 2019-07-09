@@ -2,7 +2,7 @@
 - execute in console 
     npm install
     npm run-script build
-    DEBUG=canvas-game-bootstrap:* npm run-script start
+    DEBUG=react-canvas-game:* npm run-script start
     or npm run-script start
 
 20190628: it's now a node application
