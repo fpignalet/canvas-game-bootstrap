@@ -20,19 +20,19 @@
     ],
 
     "collapsable-text": [{
-        "over": "TITLE",
+        "title": "TITLE",
         "text": "COLLAPSABLE TEXT",
         "subcontent":
             {
-                "over": "SUBTITLE",
+                "title": "SUBTITLE",
                 "text": "COLLAPSABLE SUBTEXT",
                 "subcontent":
                     {
-                        "over": "SUBSUBTITLE",
+                        "title": "SUBSUBTITLE",
                         "text": "COLLAPSABLE SUBSUBTEXT",
                         "subcontent":
                             {
-                                "over": "SUBSUBSUBTITLE",
+                                "title": "SUBSUBSUBTITLE",
                                 "text": "COLLAPSABLE SUBSUBSUBTEXT",
                                 "subcontent": null
                             }

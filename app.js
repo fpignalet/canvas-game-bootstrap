@@ -4,8 +4,6 @@ var logger = require('morgan');
 var path = require('path');
 
 var indexRouter = require('./routes/index');
-var gameRouter = require('./routes/game');
-var reactRouter = require('./routes/react');
 var testsRouter = require('./routes/tests');
 
 var express = require('express');
@@ -24,8 +22,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/game', gameRouter);
-app.use('/react', reactRouter);
 app.use('/tests', testsRouter);
 
 // catch 404 and forward to error handler
