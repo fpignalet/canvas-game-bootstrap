@@ -13,7 +13,7 @@ const ReactBStrap = require('react-bootstrap');
  *************************************************************************************/
 import ReactBaseJSX from '../../lib/reactbase.jsx';
 
-import {ReactGameJSX,} from '../../lib/react/components_game.jsx';
+import {ReactGameJSX,} from '../../lib/react/game.jsx';
 
 /*************************************************************************************
  * IMPLEMENTATION

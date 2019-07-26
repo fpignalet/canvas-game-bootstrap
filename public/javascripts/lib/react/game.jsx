@@ -110,19 +110,16 @@ export class ReactGameJSX extends ReactBaseJSX {
 
                 <ul style={{backgroundColor: "#FFFFFF"}}>
                     <li>{ this.state.instr1 }
-                        <span
-                            className={"key"}>
+                        <span className={"key"}>
                             { this.state.instr2 }
                         </span>
                         { this.state.instr3 }
-                        <span
-                            className={"key"}>
+                        <span className={"key"}>
                             { this.state.instr4 }
                         </span>
                     </li>
                     <li>{ this.state.instr5 }
-                        <span
-                            className={"key"}>
+                        <span className={"key"}>
                             { this.state.instr6 }
                         </span>
                     </li>
